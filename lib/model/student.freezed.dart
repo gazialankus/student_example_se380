@@ -20,6 +20,7 @@ Student _$StudentFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Student {
+  int get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   int get age => throw _privateConstructorUsedError;
   double get grade => throw _privateConstructorUsedError;
@@ -34,7 +35,7 @@ abstract class $StudentCopyWith<$Res> {
   factory $StudentCopyWith(Student value, $Res Function(Student) then) =
       _$StudentCopyWithImpl<$Res, Student>;
   @useResult
-  $Res call({String name, int age, double grade});
+  $Res call({int id, String name, int age, double grade});
 }
 
 /// @nodoc
@@ -50,11 +51,16 @@ class _$StudentCopyWithImpl<$Res, $Val extends Student>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? name = null,
     Object? age = null,
     Object? grade = null,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -78,7 +84,7 @@ abstract class _$$_StudentCopyWith<$Res> implements $StudentCopyWith<$Res> {
       __$$_StudentCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name, int age, double grade});
+  $Res call({int id, String name, int age, double grade});
 }
 
 /// @nodoc
@@ -91,11 +97,16 @@ class __$$_StudentCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? name = null,
     Object? age = null,
     Object? grade = null,
   }) {
     return _then(_$_Student(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -116,11 +127,16 @@ class __$$_StudentCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Student implements _Student {
   const _$_Student(
-      {required this.name, required this.age, required this.grade});
+      {required this.id,
+      required this.name,
+      required this.age,
+      required this.grade});
 
   factory _$_Student.fromJson(Map<String, dynamic> json) =>
       _$$_StudentFromJson(json);
 
+  @override
+  final int id;
   @override
   final String name;
   @override
@@ -130,7 +146,7 @@ class _$_Student implements _Student {
 
   @override
   String toString() {
-    return 'Student(name: $name, age: $age, grade: $grade)';
+    return 'Student(id: $id, name: $name, age: $age, grade: $grade)';
   }
 
   @override
@@ -138,6 +154,7 @@ class _$_Student implements _Student {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Student &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.age, age) || other.age == age) &&
             (identical(other.grade, grade) || other.grade == grade));
@@ -145,7 +162,7 @@ class _$_Student implements _Student {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name, age, grade);
+  int get hashCode => Object.hash(runtimeType, id, name, age, grade);
 
   @JsonKey(ignore: true)
   @override
@@ -163,12 +180,15 @@ class _$_Student implements _Student {
 
 abstract class _Student implements Student {
   const factory _Student(
-      {required final String name,
+      {required final int id,
+      required final String name,
       required final int age,
       required final double grade}) = _$_Student;
 
   factory _Student.fromJson(Map<String, dynamic> json) = _$_Student.fromJson;
 
+  @override
+  int get id;
   @override
   String get name;
   @override

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:se380_student/model/student.dart';
-import 'package:se380_student/service/student_service.dart';
 import 'package:se380_student/ui/students_page.dart';
 
 void main() {

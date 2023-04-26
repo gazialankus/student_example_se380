@@ -9,32 +9,27 @@ class StudentsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final studentService = ref.watch(studentServiceProvider);
+    final students = ref.watch(studentsProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text('Students'),),
       body: SafeArea(
-        child: ValueListenableBuilder(
-          valueListenable: studentService.studentsNotifier,
-          builder: (context, students, _) {
-            return Column(
-              children: [
-                ColoredBox(
-                  color: Colors.lightBlue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('My Students:'),
-                  ),
-                ),
-                Column(
-                  children: students.map((student) => StudentInList(student)).toList(),
-                ),
-                SizedBox(height: 40),
-                _MaxStudent(students),
-                _MinStudent(students),
-              ],
-            );
-          },
+        child: Column(
+          children: [
+            ColoredBox(
+              color: Colors.lightBlue,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('My Students:'),
+              ),
+            ),
+            Column(
+              children: students.map((student) => StudentInList(student)).toList(),
+            ),
+            SizedBox(height: 40),
+            _MaxStudent(students),
+            _MinStudent(students),
+          ],
         ),
       ),
     );
@@ -52,7 +47,7 @@ class StudentInList extends StatelessWidget {
       onTap: () async {
         await Navigator.of(context).push(MaterialPageRoute(
           builder: (context) {
-            return StudentPage(student);
+            return StudentPage(student.id);
           },
         ));
       },

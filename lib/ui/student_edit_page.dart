@@ -4,9 +4,9 @@ import 'package:se380_student/model/student.dart';
 import 'package:se380_student/service/student_service.dart';
 
 class StudentEditPage extends ConsumerStatefulWidget {
-  StudentEditPage(this.studentNotifier, {super.key});
+  StudentEditPage(this.studentId, {super.key});
 
-  final ValueNotifier<Student> studentNotifier;
+  final int studentId;
 
   @override
   ConsumerState<StudentEditPage> createState() => _StudentEditPageState();
@@ -22,9 +22,11 @@ class _StudentEditPageState extends ConsumerState<StudentEditPage> {
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text: widget.studentNotifier.value.name);
-    ageController = TextEditingController(text: widget.studentNotifier.value.age.toString());
-    gradeController = TextEditingController(text: widget.studentNotifier.value.grade.toString());
+
+    final student = ref.read(studentProvider(widget.studentId));
+    nameController = TextEditingController(text: student.name);
+    ageController = TextEditingController(text: student.age.toString());
+    gradeController = TextEditingController(text: student.grade.toString());
   }
 
   @override
@@ -44,13 +46,13 @@ class _StudentEditPageState extends ConsumerState<StudentEditPage> {
         final age = int.parse(ageController.text);
         final grade = double.parse(gradeController.text);
 
-        final oldStudent = widget.studentNotifier.value;
+        final oldStudent = ref.read(studentProvider(widget.studentId));
         final newStudent = Student(
-            name: name,
-            age: age,
-            grade: grade,
-          );
-
+          id: widget.studentId,
+          name: name,
+          age: age,
+          grade: grade,
+        );
 
         print('old student: ');
         print('${oldStudent.name} ${oldStudent.age} ${oldStudent.grade}');
@@ -64,7 +66,6 @@ class _StudentEditPageState extends ConsumerState<StudentEditPage> {
             oldStudent,
             newStudent,
           );
-          widget.studentNotifier.value = newStudent;
         }
 
         Navigator.of(context).pop();
@@ -87,7 +88,8 @@ class _StudentEditPageState extends ConsumerState<StudentEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    final student = widget.studentNotifier.value;
+    final student = ref.watch(studentProvider(widget.studentId));
+
     return Scaffold(
       appBar: AppBar(
         title: Text('EDITING ${student.name}'),
@@ -138,6 +140,7 @@ class _StudentEditPageState extends ConsumerState<StudentEditPage> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
+                      final student = ref.read(studentProvider(widget.studentId));
                       setState(() {
                         nameController.text = student.name;
                         ageController.text = student.age.toString();
