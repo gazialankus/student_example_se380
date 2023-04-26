@@ -41,7 +41,7 @@ class _StudentsPageState extends State<StudentsPage> {
               ),
             ),
             Column(
-              children: students.map((e) => StudentInList(e, widget.studentService, reFetchStudents)).toList(),
+              children: students.map((student) => StudentInList(student, widget.studentService, reFetchStudents)).toList(),
             ),
             SizedBox(height: 40),
             _MaxStudent(students),
