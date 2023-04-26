@@ -3,11 +3,10 @@ import 'package:se380_student/model/student.dart';
 import 'package:se380_student/service/student_service.dart';
 
 class StudentEditPage extends StatefulWidget {
-  StudentEditPage(this.student, this.studentService, this.reFetchStudents, {super.key});
+  StudentEditPage(this.studentNotifier, this.studentService, {super.key});
 
-  final Student student;
+  final ValueNotifier<Student> studentNotifier;
   final StudentService studentService;
-  final VoidCallback reFetchStudents;
 
   @override
   State<StudentEditPage> createState() => _StudentEditPageState();
@@ -23,9 +22,9 @@ class _StudentEditPageState extends State<StudentEditPage> {
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text: widget.student.name);
-    ageController = TextEditingController(text: widget.student.age.toString());
-    gradeController = TextEditingController(text: widget.student.grade.toString());
+    nameController = TextEditingController(text: widget.studentNotifier.value.name);
+    ageController = TextEditingController(text: widget.studentNotifier.value.age.toString());
+    gradeController = TextEditingController(text: widget.studentNotifier.value.grade.toString());
   }
 
   @override
@@ -45,7 +44,7 @@ class _StudentEditPageState extends State<StudentEditPage> {
         final age = int.parse(ageController.text);
         final grade = double.parse(gradeController.text);
 
-        final oldStudent = widget.student;
+        final oldStudent = widget.studentNotifier.value;
         final newStudent = Student(
             name: name,
             age: age,
@@ -62,10 +61,10 @@ class _StudentEditPageState extends State<StudentEditPage> {
         if (changed) {
           print('different because of reference, but could have same values');
           widget.studentService.replaceStudent(
-            widget.student,
+            oldStudent,
             newStudent,
           );
-          widget.reFetchStudents();
+          widget.studentNotifier.value = newStudent;
         }
 
         Navigator.of(context).pop();
@@ -88,9 +87,10 @@ class _StudentEditPageState extends State<StudentEditPage> {
 
   @override
   Widget build(BuildContext context) {
+    final student = widget.studentNotifier.value;
     return Scaffold(
       appBar: AppBar(
-        title: Text('EDITING ${widget.student.name}'),
+        title: Text('EDITING ${student.name}'),
         actions: [
           IconButton(
             onPressed: _save,
@@ -139,9 +139,9 @@ class _StudentEditPageState extends State<StudentEditPage> {
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        nameController.text = widget.student.name;
-                        ageController.text = widget.student.age.toString();
-                        gradeController.text = widget.student.grade.toString();
+                        nameController.text = student.name;
+                        ageController.text = student.age.toString();
+                        gradeController.text = student.grade.toString();
                       });
                     },
                     child: Text('UNDO'),

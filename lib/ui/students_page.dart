@@ -3,77 +3,58 @@ import 'package:se380_student/model/student.dart';
 import 'package:se380_student/service/student_service.dart';
 import 'package:se380_student/ui/student_page.dart';
 
-class StudentsPage extends StatefulWidget {
+class StudentsPage extends StatelessWidget {
   const StudentsPage(this.studentService, {super.key});
 
   final StudentService studentService;
-
-  @override
-  State<StudentsPage> createState() => _StudentsPageState();
-}
-
-class _StudentsPageState extends State<StudentsPage> {
-  late List<Student> students;
-  @override
-  void initState() {
-    students = widget.studentService.fetchStudents();
-    super.initState();
-  }
-
-  void reFetchStudents() {
-    setState(() {
-      students = widget.studentService.fetchStudents();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Students'),),
       body: SafeArea(
-        child: Column(
-          children: [
-            ColoredBox(
-              color: Colors.lightBlue,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('My Students:'),
-              ),
-            ),
-            Column(
-              children: students.map((student) => StudentInList(student, widget.studentService, reFetchStudents)).toList(),
-            ),
-            SizedBox(height: 40),
-            _MaxStudent(students),
-            _MinStudent(students),
-          ],
+        child: ValueListenableBuilder(
+          valueListenable: studentService.studentsNotifier,
+          builder: (context, students, _) {
+            return Column(
+              children: [
+                ColoredBox(
+                  color: Colors.lightBlue,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('My Students:'),
+                  ),
+                ),
+                Column(
+                  children: students.map((student) => StudentInList(student, studentService)).toList(),
+                ),
+                SizedBox(height: 40),
+                _MaxStudent(students),
+                _MinStudent(students),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 }
 
-class StudentInList extends StatefulWidget {
-  const StudentInList(this.student, this.studentService, this.reFetchStudents, {super.key});
+class StudentInList extends StatelessWidget {
+  const StudentInList(this.student, this.studentService, {super.key});
 
   final Student student;
   final StudentService studentService;
-  final VoidCallback reFetchStudents;
 
-  @override
-  State<StudentInList> createState() => _StudentInListState();
-}
-
-class _StudentInListState extends State<StudentInList> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
         await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => StudentPage(widget.student, widget.studentService, widget.reFetchStudents),
+          builder: (context) {
+            return StudentPage(student, studentService);
+          },
         ));
-        setState(() {
-        });
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -81,13 +62,13 @@ class _StudentInListState extends State<StudentInList> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              widget.student.name,
+              student.name,
             ),
             Text(
-              '${widget.student.age}',
+              '${student.age}',
             ),
             Text(
-              '${widget.student.grade}',
+              '${student.grade}',
             ),
           ],
         ),

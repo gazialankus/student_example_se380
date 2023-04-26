@@ -1,40 +1,34 @@
 
 
+import 'package:flutter/cupertino.dart';
 import 'package:se380_student/model/student.dart';
 
 class StudentService {
-  List<Student>? students;
-
-  List<Student> fetchStudents() {
-    if (students == null) {
-      students = [
-        Student(
-          name: 'Ali',
-          age: 19,
-          grade: 100,
-        ),
-        Student(
-          name: 'Veli',
-          age: 20,
-          grade: 10,
-        ),
-        Student(
-          name: 'Ahmet',
-          age: 18,
-          grade: 90,
-        ),
-      ];
-    }
-
-    return students!;
-  }
+  final studentsNotifier = ValueNotifier<List<Student>>([
+    Student(
+      name: 'Ali',
+      age: 19,
+      grade: 100,
+    ),
+    Student(
+      name: 'Veli',
+      age: 20,
+      grade: 10,
+    ),
+    Student(
+      name: 'Ahmet',
+      age: 18,
+      grade: 90,
+    ),
+  ]);
 
   void replaceStudent(Student oldStudent, Student newStudent) {
-    final students = this.students;
-    if (students == null) return;
+    final students = studentsNotifier.value;
 
     final index = students.indexOf(oldStudent);
-    students[index] = newStudent;
+    final newStudents = [...students];
+    newStudents[index] = newStudent;
+    studentsNotifier.value = newStudents;
   }
 
 }
