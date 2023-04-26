@@ -4,10 +4,9 @@ import 'package:se380_student/service/student_service.dart';
 import 'package:se380_student/ui/student_edit_page.dart';
 
 class StudentPage extends StatefulWidget {
-  const StudentPage(this.student, this.studentService, {Key? key}) : super(key: key);
+  const StudentPage(this.student, {Key? key}) : super(key: key);
 
   final Student student;
-  final StudentService studentService;
 
   @override
   State<StudentPage> createState() => _StudentPageState();
@@ -34,7 +33,7 @@ class _StudentPageState extends State<StudentPage> {
               IconButton(
                 onPressed: () async {
                   await Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => StudentEditPage(studentNotifier, widget.studentService),
+                    builder: (context) => StudentEditPage(studentNotifier),
                   ));
                 },
                 icon: Icon(Icons.edit),

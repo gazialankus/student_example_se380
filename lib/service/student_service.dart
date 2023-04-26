@@ -1,7 +1,8 @@
-
-
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:se380_student/model/student.dart';
+
+final studentServiceProvider = Provider((ref) => StudentService());
 
 class StudentService {
   final studentsNotifier = ValueNotifier<List<Student>>([

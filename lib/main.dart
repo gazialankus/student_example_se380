@@ -1,27 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:se380_student/model/student.dart';
 import 'package:se380_student/service/student_service.dart';
 import 'package:se380_student/ui/students_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  late StudentService studentService;
-
-  @override
-  void initState() {
-    super.initState();
-    studentService = StudentService();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +22,13 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainPage(studentService),
+      home: MainPage(),
     );
   }
 }
 
 class MainPage extends StatelessWidget {
-  MainPage(this.studentService, {Key? key}) : super(key: key);
-
-  final StudentService studentService;
+  MainPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +42,7 @@ class MainPage extends StatelessWidget {
               print('will go to students');
               // give students to StudentsPage
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => StudentsPage(studentService),
+                builder: (context) => StudentsPage(),
               ));
             },
             child: Text(

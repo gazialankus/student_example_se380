@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:se380_student/model/student.dart';
 import 'package:se380_student/service/student_service.dart';
 
-class StudentEditPage extends StatefulWidget {
-  StudentEditPage(this.studentNotifier, this.studentService, {super.key});
+class StudentEditPage extends ConsumerStatefulWidget {
+  StudentEditPage(this.studentNotifier, {super.key});
 
   final ValueNotifier<Student> studentNotifier;
-  final StudentService studentService;
 
   @override
-  State<StudentEditPage> createState() => _StudentEditPageState();
+  ConsumerState<StudentEditPage> createState() => _StudentEditPageState();
 }
 
-class _StudentEditPageState extends State<StudentEditPage> {
+class _StudentEditPageState extends ConsumerState<StudentEditPage> {
   final _formKey = GlobalKey<FormState>();
 
   late final TextEditingController nameController;
@@ -60,7 +60,7 @@ class _StudentEditPageState extends State<StudentEditPage> {
         final changed = oldStudent != newStudent;
         if (changed) {
           print('different because of reference, but could have same values');
-          widget.studentService.replaceStudent(
+          ref.read(studentServiceProvider).replaceStudent(
             oldStudent,
             newStudent,
           );

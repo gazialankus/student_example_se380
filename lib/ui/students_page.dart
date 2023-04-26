@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:se380_student/model/student.dart';
 import 'package:se380_student/service/student_service.dart';
 import 'package:se380_student/ui/student_page.dart';
 
-class StudentsPage extends StatelessWidget {
-  const StudentsPage(this.studentService, {super.key});
-
-  final StudentService studentService;
+class StudentsPage extends ConsumerWidget {
+  const StudentsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final studentService = ref.watch(studentServiceProvider);
+
     return Scaffold(
       appBar: AppBar(title: Text('Students'),),
       body: SafeArea(
@@ -26,7 +27,7 @@ class StudentsPage extends StatelessWidget {
                   ),
                 ),
                 Column(
-                  children: students.map((student) => StudentInList(student, studentService)).toList(),
+                  children: students.map((student) => StudentInList(student)).toList(),
                 ),
                 SizedBox(height: 40),
                 _MaxStudent(students),
@@ -41,10 +42,9 @@ class StudentsPage extends StatelessWidget {
 }
 
 class StudentInList extends StatelessWidget {
-  const StudentInList(this.student, this.studentService, {super.key});
+  const StudentInList(this.student, {super.key});
 
   final Student student;
-  final StudentService studentService;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class StudentInList extends StatelessWidget {
       onTap: () async {
         await Navigator.of(context).push(MaterialPageRoute(
           builder: (context) {
-            return StudentPage(student, studentService);
+            return StudentPage(student);
           },
         ));
       },
