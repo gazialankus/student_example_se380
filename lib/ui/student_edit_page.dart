@@ -58,7 +58,8 @@ class _StudentEditPageState extends State<StudentEditPage> {
         print('new student: ');
         print('${newStudent.name} ${newStudent.age} ${newStudent.grade}');
 
-        if (oldStudent != newStudent) {
+        final changed = oldStudent != newStudent;
+        if (changed) {
           print('different because of reference, but could have same values');
           widget.studentService.replaceStudent(
             widget.student,
@@ -67,9 +68,14 @@ class _StudentEditPageState extends State<StudentEditPage> {
           widget.reFetchStudents();
         }
 
-
-
         Navigator.of(context).pop();
+        if (!changed) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Student did not change.'),
+            ),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
