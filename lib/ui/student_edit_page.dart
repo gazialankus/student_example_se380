@@ -71,7 +71,11 @@ class _StudentEditPageState extends State<StudentEditPage> {
 
         Navigator.of(context).pop();
       } else {
-        print('FORM IS NOT VALID!');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Could not save, please try again.'),
+          ),
+        );
       }
     }
   }
