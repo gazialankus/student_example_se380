@@ -26,8 +26,6 @@ class _StudentPageState extends State<StudentPage> {
               await Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => StudentEditPage(widget.student, widget.studentService, widget.reFetchStudents),
               ));
-              setState(() {
-              });
             },
             icon: Icon(Icons.edit),
           ),
