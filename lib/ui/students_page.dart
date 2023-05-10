@@ -4,16 +4,50 @@ import 'package:se380_student/model/student.dart';
 import 'package:se380_student/service/student_service.dart';
 import 'package:se380_student/ui/student_page.dart';
 
-class StudentsPage extends ConsumerWidget {
+class StudentsPage extends StatelessWidget {
   const StudentsPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final students = ref.watch(studentsProvider);
-
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Students'),),
       body: SafeArea(
+        child: _StudentList(),
+      ),
+    );
+  }
+}
+
+class _StudentList extends ConsumerWidget {
+  const _StudentList({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncStudents = ref.watch(studentsProvider);
+
+    final students = asyncStudents.value;
+    if (!(asyncStudents.hasValue && students != null)) {
+      // either loading or error
+
+      if (asyncStudents.isLoading) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (asyncStudents.hasError) {
+        return Text('ERROR ${asyncStudents.error}');
+      } else {
+        return Text('Unexpected');
+      }
+    }
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        await ref.refresh(studentsProvider.future);
+      },
+      child: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
         child: Column(
           children: [
             ColoredBox(

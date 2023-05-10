@@ -23,10 +23,19 @@ class _StudentEditPageState extends ConsumerState<StudentEditPage> {
   void initState() {
     super.initState();
 
-    final student = ref.read(studentProvider(widget.studentId));
-    nameController = TextEditingController(text: student.name);
-    ageController = TextEditingController(text: student.age.toString());
-    gradeController = TextEditingController(text: student.grade.toString());
+    initStudent();
+  }
+
+  Future<void> initStudent() async {
+    nameController = TextEditingController();
+    ageController = TextEditingController();
+    gradeController = TextEditingController();
+
+    final student = await ref.read(studentProvider(widget.studentId).future);
+
+    nameController.text = student.name;
+    ageController.text = student.age.toString();
+    gradeController.text = student.grade.toString();
   }
 
   @override
@@ -46,7 +55,7 @@ class _StudentEditPageState extends ConsumerState<StudentEditPage> {
         final age = int.parse(ageController.text);
         final grade = double.parse(gradeController.text);
 
-        final oldStudent = ref.read(studentProvider(widget.studentId));
+        final oldStudent = ref.read(studentProvider(widget.studentId)).requireValue;
         final newStudent = Student(
           id: widget.studentId,
           name: name,
@@ -88,7 +97,22 @@ class _StudentEditPageState extends ConsumerState<StudentEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    final student = ref.watch(studentProvider(widget.studentId));
+    final asyncStudent = ref.watch(studentProvider(widget.studentId));
+
+    final student = asyncStudent.value;
+    if (!(asyncStudent.hasValue && student != null)) {
+      // either loading or error
+
+      if (asyncStudent.isLoading) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (asyncStudent.hasError) {
+        return Text('ERROR ${asyncStudent.error}');
+      } else {
+        return Text('Unexpected');
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -100,62 +124,64 @@ class _StudentEditPageState extends ConsumerState<StudentEditPage> {
           )
         ],
       ),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              TextFormField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  label: Text('Name'),
-                ),
-              ),
-              TextFormField(
-                controller: ageController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'You have to provide an age';
-                  }
-                  var maybeAge = int.tryParse(value);
-                  if (maybeAge == null || maybeAge <= 0) {
-                    return 'Please provide a valid integer as age';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  label: Text('Age'),
-                ),
-                keyboardType: TextInputType.number,
-              ),
-              TextFormField(
-                controller: gradeController,
-                decoration: InputDecoration(
-                  label: Text('Grade'),
-                ),
-                keyboardType: TextInputType.number,
-              ),
-              Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      final student = ref.read(studentProvider(widget.studentId));
-                      setState(() {
-                        nameController.text = student.name;
-                        ageController.text = student.age.toString();
-                        gradeController.text = student.grade.toString();
-                      });
-                    },
-                    child: Text('UNDO'),
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    label: Text('Name'),
                   ),
-                  ElevatedButton(
-                    onPressed: _save,
-                    child: Text('SAVE'),
+                ),
+                TextFormField(
+                  controller: ageController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'You have to provide an age';
+                    }
+                    var maybeAge = int.tryParse(value);
+                    if (maybeAge == null || maybeAge <= 0) {
+                      return 'Please provide a valid integer as age';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    label: Text('Age'),
                   ),
-                ],
-              ),
-            ],
+                  keyboardType: TextInputType.number,
+                ),
+                TextFormField(
+                  controller: gradeController,
+                  decoration: InputDecoration(
+                    label: Text('Grade'),
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        final student = ref.read(studentProvider(widget.studentId)).requireValue;
+                        setState(() {
+                          nameController.text = student.name;
+                          ageController.text = student.age.toString();
+                          gradeController.text = student.grade.toString();
+                        });
+                      },
+                      child: Text('UNDO'),
+                    ),
+                    ElevatedButton(
+                      onPressed: _save,
+                      child: Text('SAVE'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

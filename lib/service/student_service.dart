@@ -1,15 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:se380_student/model/student.dart';
+import 'package:http/http.dart' as http;
+
+const apiBaseUrl = 'https://645b91fc99b618d5f31f0467.mockapi.io/api';
 
 final studentServiceProvider = ChangeNotifierProvider((ref) => StudentService());
 
-final studentsProvider = Provider((ref) {
+final studentsProvider = FutureProvider((ref) {
   final studentService = ref.watch(studentServiceProvider);
   return studentService.fetchStudents();
 });
 
-final studentProvider = Provider.family<Student, String>((ref, id) {
+final studentProvider = FutureProvider.family<Student, String>((ref, id) {
   final studentService = ref.watch(studentServiceProvider);
   return studentService.fetchStudent(id);
 });
@@ -36,21 +41,28 @@ class StudentService extends ChangeNotifier {
     ),
   ];
 
-  void replaceStudent(Student oldStudent, Student newStudent) {
-    // could use the id for easier change
-    final index = students.indexOf(oldStudent);
-    final newStudents = [...students];
-    newStudents[index] = newStudent;
-    students = newStudents;
+  Future<void> replaceStudent(Student oldStudent, Student newStudent) async {
+    await http.put(Uri.parse('$apiBaseUrl/Student/${oldStudent.id}'));
     notifyListeners();
   }
 
-  List<Student> fetchStudents() {
-    return students;
+  Future<List<Student>> fetchStudents() async {
+    final response = await http.get(Uri.parse('$apiBaseUrl/Student'));
+    final listOfMaps = jsonDecode(response.body);
+
+    if (listOfMaps is List) {
+      var list = listOfMaps.map((m) => Student.fromJson(m)).toList();
+      return list;
+    } else {
+      return [];
+    }
   }
 
-  Student fetchStudent(String id) {
-    return students.firstWhere((s) => s.id == id);
+  Future<Student> fetchStudent(String id) async {
+    final response = await http.get(Uri.parse('$apiBaseUrl/Student/$id'));
+    var body = response.body;
+    print(body);
+    return Student.fromJson(jsonDecode(body));
   }
 
 }

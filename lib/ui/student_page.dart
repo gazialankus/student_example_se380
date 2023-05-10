@@ -10,7 +10,22 @@ class StudentPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final student = ref.watch(studentProvider(studentId));
+    final asyncStudent = ref.watch(studentProvider(studentId));
+
+    final student = asyncStudent.value;
+    if (!(asyncStudent.hasValue && student != null)) {
+      // either loading or error
+
+      if (asyncStudent.isLoading) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (asyncStudent.hasError) {
+        return Text('ERROR ${asyncStudent.error}');
+      } else {
+        return Text('Unexpected');
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
