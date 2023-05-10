@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "894636443903",
+    "project_id": "se3802023spring",
+    "storage_bucket": "se3802023spring.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:894636443903:android:84f972fa263c6a108ee4ca",
+        "android_client_info": {
+          "package_name": "com.example.se380_student"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "894636443903-47g4h82156cpkdkqcaudf5j7msfr9q2e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhR9aJaFedzccS3M51mK32MGebesjpUgM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "894636443903-47g4h82156cpkdkqcaudf5j7msfr9q2e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
