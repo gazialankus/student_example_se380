@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:se380_student/model/student.dart';
@@ -11,7 +12,7 @@ final studentServiceProvider = ChangeNotifierProvider((ref) => StudentService())
 
 final studentsProvider = FutureProvider((ref) {
   final studentService = ref.watch(studentServiceProvider);
-  return studentService.fetchStudents();
+  return studentService.fetchStudentsFromFirebase();
 });
 
 final studentProvider = FutureProvider.family<Student, String>((ref, id) {
@@ -56,6 +57,17 @@ class StudentService extends ChangeNotifier {
     } else {
       return [];
     }
+  }
+
+  Future<List<Student>> fetchStudentsFromFirebase() async {
+    final qSnap = await FirebaseFirestore.instance.collection('students')
+        .withConverter(
+          fromFirestore: Student.fromFirestore,
+          toFirestore: Student.toFirestore,
+        )
+        .get();
+
+    return qSnap.docs.map((e) => e.data()).toList();
   }
 
   Future<Student> fetchStudent(String id) async {

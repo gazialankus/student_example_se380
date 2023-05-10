@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'student.freezed.dart';
@@ -14,4 +15,19 @@ class Student with _$Student {
 
   factory Student.fromJson(Map<String, dynamic> json) =>
       _$StudentFromJson(json);
+
+  factory Student.fromFirestore(
+      DocumentSnapshot<Map<String, dynamic>> snapshot,
+      SnapshotOptions? _,
+      ) =>
+      Student.fromJson({
+        'id': snapshot.id,
+        ...snapshot.data()!,
+      });
+
+  static Map<String, Object?> toFirestore(
+      Student value,
+      SetOptions? options,
+      ) =>
+      value.toJson().remove('id');
 }
