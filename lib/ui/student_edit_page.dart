@@ -6,7 +6,7 @@ import 'package:se380_student/service/student_service.dart';
 class StudentEditPage extends ConsumerStatefulWidget {
   StudentEditPage(this.studentId, {super.key});
 
-  final int studentId;
+  final String studentId;
 
   @override
   ConsumerState<StudentEditPage> createState() => _StudentEditPageState();

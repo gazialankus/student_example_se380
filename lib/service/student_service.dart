@@ -9,7 +9,7 @@ final studentsProvider = Provider((ref) {
   return studentService.fetchStudents();
 });
 
-final studentProvider = Provider.family<Student, int>((ref, id) {
+final studentProvider = Provider.family<Student, String>((ref, id) {
   final studentService = ref.watch(studentServiceProvider);
   return studentService.fetchStudent(id);
 });
@@ -17,19 +17,19 @@ final studentProvider = Provider.family<Student, int>((ref, id) {
 class StudentService extends ChangeNotifier {
   var students = [
     Student(
-      id: 0,
+      id: '0',
       name: 'Ali',
       age: 19,
       grade: 100,
     ),
     Student(
-      id: 1,
+      id: '1',
       name: 'Veli',
       age: 20,
       grade: 10,
     ),
     Student(
-      id: 2,
+      id: '2',
       name: 'Ahmet',
       age: 18,
       grade: 90,
@@ -49,7 +49,7 @@ class StudentService extends ChangeNotifier {
     return students;
   }
 
-  Student fetchStudent(int id) {
+  Student fetchStudent(String id) {
     return students.firstWhere((s) => s.id == id);
   }
 

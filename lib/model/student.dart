@@ -6,7 +6,7 @@ part 'student.g.dart';
 @freezed
 class Student with _$Student {
   const factory Student({
-    required int id,
+    required String id,
     required String name,
     required int age,
     required double grade,

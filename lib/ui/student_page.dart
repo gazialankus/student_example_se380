@@ -6,7 +6,7 @@ import 'package:se380_student/ui/student_edit_page.dart';
 class StudentPage extends ConsumerWidget {
   const StudentPage(this.studentId, {Key? key}) : super(key: key);
 
-  final int studentId;
+  final String studentId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
