@@ -29,6 +29,13 @@
             {
               "client_id": "894636443903-47g4h82156cpkdkqcaudf5j7msfr9q2e.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "894636443903-tmlo2d218tvdl2n057f6vq73l7a3ikbo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.se380Student"
+              }
             }
           ]
         }
